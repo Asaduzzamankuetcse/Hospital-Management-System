@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -15,6 +16,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class HibernateConfig {
+	@Value("${hibernate.hbm2ddl.auto}")
+	private String HIBERNATE_HBM2DDL_AUTO;
+	
 	@Bean
 	public DataSource dataSource(){
 		DriverManagerDataSource dataSource= new DriverManagerDataSource();
@@ -24,6 +28,7 @@ public class HibernateConfig {
 		dataSource.setPassword("");
 		return dataSource;
 	}
+	
 	@Bean
 	public LocalSessionFactoryBean localSessionFactoryBean(){
 		LocalSessionFactoryBean sessionFactoryBean=new LocalSessionFactoryBean();
@@ -32,11 +37,12 @@ public class HibernateConfig {
 		Properties prop=new Properties();
 		prop.put("spring.jpa.properties.hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 		prop.put("spring.jpa.show-sql", "true");
+		prop.put("hibernate.hbm2ddl.auto", HIBERNATE_HBM2DDL_AUTO);
 		sessionFactoryBean.setHibernateProperties(prop);
 		return sessionFactoryBean;
 		
 	}
-	
+	@Bean
 	public HibernateTransactionManager transactionManager(){
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
 		transactionManager.setSessionFactory(localSessionFactoryBean().getObject());
