@@ -26,5 +26,10 @@ public class SettingsController {
 		return "settings/settings_create"; 
 		
 	}
+	@GetMapping(value="/")
+	public String home(Model model){
+		return "index/index";
+		
+	}
 
 }
